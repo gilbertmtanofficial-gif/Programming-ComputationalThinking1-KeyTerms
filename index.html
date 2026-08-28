@@ -1,664 +1,748 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Duck Hunt Algorithm Quiz</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Duck Hunt Algorithm Quiz</title>
 
-<style>
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(#8bd5ff 0 63%, #83c95c 63% 100%);
-    min-height: 100vh;
-    overflow-x: hidden;
-    color: #19324d;
-  }
-
-  .game {
-    width: min(1000px, 94%);
-    margin: 0 auto;
-    padding: 20px 0 40px;
-    text-align: center;
-  }
-
-  h1 {
-    margin: 8px 0;
-    color: #173b5d;
-    text-shadow: 2px 2px white;
-  }
-
-  .subtitle {
-    margin: 0 0 15px;
-    font-weight: bold;
-  }
-
-  .scoreboard {
-    display: flex;
-    justify-content: center;
-    gap: 25px;
-    flex-wrap: wrap;
-    margin: 12px auto;
-    font-size: 1.1rem;
-    font-weight: bold;
-  }
-
-  .definition-card {
-    background: rgba(255,255,255,.94);
-    border: 3px solid #23527c;
-    border-radius: 18px;
-    padding: 20px;
-    box-shadow: 0 8px 18px rgba(0,0,0,.2);
-  }
-
-  #definition {
-    font-size: clamp(1.05rem, 2vw, 1.35rem);
-    line-height: 1.5;
-    min-height: 85px;
-  }
-
-  .answer-area {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 7px;
-    margin: 22px 0;
-  }
-
-  .letter-box {
-    width: 38px;
-    height: 45px;
-    border: 2px solid #24577c;
-    border-radius: 7px;
-    background: white;
-    text-align: center;
-    text-transform: uppercase;
-    font-size: 1.45rem;
-    font-weight: bold;
-    color: #173b5d;
-  }
-
-  .letter-box:focus {
-    outline: 3px solid #ffca28;
-    border-color: #e59400;
-  }
-
-  .space {
-    width: 20px;
-  }
-
-  button {
-    border: 0;
-    border-radius: 10px;
-    padding: 12px 20px;
-    margin: 5px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    color: white;
-    background: #286090;
-    box-shadow: 0 4px 0 #173b5d;
-  }
-
-  button:hover {
-    filter: brightness(1.12);
-  }
-
-  button:active {
-    transform: translateY(3px);
-    box-shadow: 0 1px 0 #173b5d;
-  }
-
-  #resetButton {
-    background: #777;
-    box-shadow: 0 4px 0 #444;
-  }
-
-  .message {
-    min-height: 35px;
-    margin: 15px 0;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-
-  .hint {
-    font-size: .95rem;
-    color: #3b5264;
-  }
-
-  .scene {
-    position: relative;
-    height: 260px;
-    margin-top: 15px;
-    overflow: hidden;
-    border-radius: 18px;
-    background:
-      radial-gradient(circle at 15% 20%, white 0 22px, transparent 23px),
-      radial-gradient(circle at 22% 20%, white 0 28px, transparent 29px),
-      radial-gradient(circle at 29% 20%, white 0 20px, transparent 21px),
-      linear-gradient(#86d7ff 0 65%, #74bd51 65%);
-    border: 3px solid #4b873d;
-  }
-
-  .duck {
-    position: absolute;
-    left: 44%;
-    top: 35%;
-    font-size: 4.5rem;
-    z-index: 3;
-    user-select: none;
-    transition: none;
-  }
-
-  .duck.fly-away {
-    animation: flyAway 2.2s ease-in forwards;
-  }
-
-  .duck.shot {
-    animation: duckShot .8s ease-in forwards;
-  }
-
-  .dog {
-    position: absolute;
-    left: 8%;
-    bottom: 4px;
-    font-size: 5.5rem;
-    z-index: 2;
-    user-select: none;
-  }
-
-  .dog.laughing {
-    animation: laugh .8s ease-in-out 3;
-  }
-
-  .dog.retrieve {
-    animation: retrieve 2s ease-in-out forwards;
-  }
-
-  .cloud {
-    position: absolute;
-    font-size: 3.5rem;
-    opacity: .8;
-  }
-
-  .cloud.one {
-    top: 18px;
-    left: 10%;
-  }
-
-  .cloud.two {
-    top: 55px;
-    right: 12%;
-  }
-
-  .hint-box {
-    display: inline-block;
-    background: #fff4bd;
-    border: 2px solid #d5a900;
-    border-radius: 8px;
-    padding: 7px 12px;
-    margin-top: 10px;
-    font-weight: bold;
-  }
-
-  @keyframes flyAway {
-    0% {
-      transform: translate(0, 0) rotate(0deg);
+  <style>
+    * {
+      box-sizing: border-box;
     }
-    100% {
-      transform: translate(480px, -210px) rotate(25deg);
-      opacity: 0;
-    }
-  }
 
-  @keyframes duckShot {
-    0% {
-      transform: translateY(0) rotate(0);
-      opacity: 1;
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-family: Arial, sans-serif;
+      color: #19324d;
+      background: linear-gradient(#8bd5ff 0 63%, #83c95c 63% 100%);
     }
-    100% {
-      transform: translateY(190px) rotate(180deg);
-      opacity: 0;
-    }
-  }
 
-  @keyframes laugh {
-    0%, 100% {
-      transform: rotate(0) scale(1);
+    .game {
+      width: min(1000px, 94%);
+      margin: 0 auto;
+      padding: 20px 0 40px;
+      text-align: center;
     }
-    50% {
-      transform: rotate(-10deg) scale(1.15);
-    }
-  }
 
-  @keyframes retrieve {
-    0% {
-      left: 8%;
+    h1 {
+      margin: 8px 0;
+      color: #173b5d;
+      text-shadow: 2px 2px white;
     }
-    45% {
-      left: 42%;
-    }
-    100% {
-      left: 8%;
-    }
-  }
 
-  @media (max-width: 600px) {
-    .letter-box {
-      width: 30px;
-      height: 38px;
+    .subtitle {
+      margin: 0 0 15px;
+      font-weight: bold;
+    }
+
+    .scoreboard {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      flex-wrap: wrap;
+      margin: 12px auto;
       font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    .definition-card {
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 3px solid #23527c;
+      border-radius: 18px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+    }
+
+    #definition {
+      min-height: 85px;
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
+      line-height: 1.5;
+    }
+
+    .hint-box {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .answer-area {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+      margin: 22px 0;
+    }
+
+    .letter-box {
+      width: 38px;
+      height: 45px;
+      padding: 2px;
+      border: 2px solid #24577c;
+      border-radius: 7px;
+      background: white;
+      color: #173b5d;
+      text-align: center;
+      text-transform: uppercase;
+      font-size: 1.45rem;
+      font-weight: bold;
+    }
+
+    .letter-box:focus {
+      outline: 3px solid #ffca28;
+      border-color: #e59400;
+    }
+
+    .space {
+      width: 20px;
+    }
+
+    button {
+      margin: 5px;
+      padding: 12px 20px;
+      border: 0;
+      border-radius: 10px;
+      background: #286090;
+      color: white;
+      box-shadow: 0 4px 0 #173b5d;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    button:hover {
+      filter: brightness(1.12);
+    }
+
+    button:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #173b5d;
+    }
+
+    #resetButton {
+      background: #777;
+      box-shadow: 0 4px 0 #444;
+    }
+
+    .message {
+      min-height: 35px;
+      margin: 15px 0;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .hint {
+      color: #3b5264;
+      font-size: 0.95rem;
+    }
+
+    .scene {
+      position: relative;
+      height: 260px;
+      margin-top: 15px;
+      overflow: hidden;
+      border: 3px solid #4b873d;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 15% 20%, white 0 22px, transparent 23px),
+        radial-gradient(circle at 22% 20%, white 0 28px, transparent 29px),
+        radial-gradient(circle at 29% 20%, white 0 20px, transparent 21px),
+        linear-gradient(#86d7ff 0 65%, #74bd51 65%);
+    }
+
+    .cloud {
+      position: absolute;
+      z-index: 1;
+      font-size: 3rem;
+      opacity: 0.85;
+    }
+
+    .cloud.one {
+      top: 18px;
+      left: 12%;
+    }
+
+    .cloud.two {
+      top: 55px;
+      right: 15%;
+      font-size: 2.5rem;
     }
 
     .duck {
-      left: 38%;
+      position: absolute;
+      top: 35%;
+      left: 44%;
+      z-index: 3;
+      user-select: none;
+      font-size: 4.5rem;
     }
-  }
-</style>
+
+    .duck.fly-away {
+      animation: flyAway 2.2s ease-in forwards;
+    }
+
+    .duck.shot {
+      animation: duckShot 0.8s ease-out forwards;
+    }
+
+    .dog {
+      position: absolute;
+      bottom: 10px;
+      left: 8%;
+      z-index: 5;
+      display: none;
+      width: 130px;
+      height: 130px;
+      background-image: url("dogholdsduck.png");
+      background-position: center bottom;
+      background-repeat: no-repeat;
+      background-size: contain;
+      pointer-events: none;
+    }
+
+    .dog.show {
+      display: block;
+      animation: dogRetrieve 1s ease-in-out;
+    }
+
+    @keyframes dogRetrieve {
+      0% {
+        transform: translateY(100px);
+        opacity: 0;
+      }
+
+      50% {
+        transform: translateY(-20px);
+        opacity: 1;
+      }
+
+      75% {
+        transform: translateY(0);
+      }
+
+      100% {
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes duckShot {
+      0% {
+        transform: translateY(0) rotate(0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(190px) rotate(180deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes flyAway {
+      0% {
+        transform: translate(0, 0) rotate(0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translate(480px, -210px) rotate(25deg);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .letter-box {
+        width: 30px;
+        height: 38px;
+        font-size: 1.1rem;
+      }
+
+      .duck {
+        left: 38%;
+      }
+
+      .dog {
+        left: 4%;
+        width: 110px;
+        height: 110px;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="game">
+    <h1>🦆 Duck Hunt: Programming Vocabulary</h1>
 
-<div class="game">
-  <h1>🦆 Duck Hunt: Programming Vocabulary</h1>
-  <p class="subtitle">Read the definition and type the answer, one letter per box.</p>
+    <p class="subtitle">
+      Read the definition and type the answer, one letter per box.
+    </p>
 
-  <div class="scoreboard">
-    <span>Question: <span id="questionNumber">1</span>/40</span>
-    <span>Score: <span id="score">0</span></span>
-    <span>Streak: <span id="streak">0</span></span>
-  </div>
+    <div class="scoreboard">
+      <span>
+        Question:
+        <span id="questionNumber">1</span>/40
+      </span>
 
-  <section class="definition-card">
-    <div id="definition"></div>
-    <div class="hint-box">
-      Answer length: <span id="answerLength"></span> letters
+      <span>
+        Score:
+        <span id="score">0</span>
+      </span>
+
+      <span>
+        Streak:
+        <span id="streak">0</span>
+      </span>
     </div>
 
-    <div id="answerArea" class="answer-area"></div>
+    <section class="definition-card">
+      <div id="definition"></div>
 
-    <button id="shootButton">🔫 Shoot!</button>
-    <button id="nextButton" hidden>➡️ Next Question</button>
-    <button id="resetButton">🔄 Restart Game</button>
+      <div class="hint-box">
+        Answer length:
+        <span id="answerLength"></span>
+        letters
+      </div>
 
-    <div id="message" class="message"></div>
-    <div class="hint">
-      Press Enter to submit your answer.
+      <div id="answerArea" class="answer-area"></div>
+
+      <button id="shootButton">🔫 Shoot!</button>
+      <button id="nextButton" hidden>➡️ Next Question</button>
+      <button id="resetButton">🔄 Restart Game</button>
+
+      <div id="message" class="message"></div>
+
+      <div class="hint">
+        Type one letter per box. Press Enter to submit your answer.
+      </div>
+    </section>
+
+    <div class="scene">
+      <div class="cloud one">☁️</div>
+      <div class="cloud two">☁️</div>
+
+      <div id="duck" class="duck">🦆</div>
+      <div id="dog" class="dog"></div>
     </div>
-  </section>
-
-  <div class="scene">
-    <div class="cloud one">☁️</div>
-    <div class="cloud two">☁️</div>
-    <div id="duck" class="duck">🦆</div>
-    <div id="dog" class="dog">🐶</div>
   </div>
-</div>
 
-<script>
-const questions = [
-  {
-    definition: "Sequential method of searching a list from start to end, checking each element in turn.",
-    answer: "Linear search"
-  },
-  {
-    definition: "Divide-and-conquer algorithm that splits an array in half each iteration, checking the middle value to determine whether it is higher, lower, or the required value.",
-    answer: "Binary search"
-  },
-  {
-    definition: "A visual representation of an algorithm.",
-    answer: "Flowchart"
-  },
-  {
-    definition: "Ability of a computer system to do human-like behaviour, such as learning and developing its own programming from experience.",
-    answer: "Artificial intelligence AI"
-  },
-  {
-    definition: "Ability of a computer system to learn over time.",
-    answer: "Machine learning"
-  },
-  {
-    definition: "Classification applied to a data item specifying which type of data that item represents, such as currency, text, or number.",
-    answer: "Data type"
-  },
-  {
-    definition: "Instructions that tell a computer system how to complete a task.",
-    answer: "Program"
-  },
-  {
-    definition: "Step-by-step instructions to solve a particular problem.",
-    answer: "Algorithm"
-  },
-  {
-    definition: "A data type: a sequence of characters that can be text, numbers, or symbols. Quotation marks define it as a string.",
-    answer: "String"
-  },
-  {
-    definition: "A data type: a whole number, such as 5, 0, or -999.",
-    answer: "Integer"
-  },
-  {
-    definition: "A data type: a decimal number, also known as a float.",
-    answer: "Real"
-  },
-  {
-    definition: "Joining two strings together.",
-    answer: "Concatenation"
-  },
-  {
-    definition: "Change the data type of a variable.",
-    answer: "Cast"
-  },
-  {
-    definition: "A textual representation of an algorithm that focuses on the algorithm rather than a programming language.",
-    answer: "Pseudocode"
-  },
-  {
-    definition: "Document that details the tests to be carried out, expected results, and whether the tests were successful.",
-    answer: "Test plan"
-  },
-  {
-    definition: "Tasks or features a user expects an application to be able to do or help with.",
-    answer: "User requirements"
-  },
-  {
-    definition: "Initial product created for testing and reviewing before a final product is released.",
-    answer: "Prototype"
-  },
-  {
-    definition: "Repeat, repeated, or repetition.",
-    answer: "Iteration"
-  },
-  {
-    definition: "Technique for predicting step by step what will happen as each line of an algorithm or program runs, and identifying errors.",
-    answer: "Trace table"
-  },
-  {
-    definition: "Named memory location that can store a value.",
-    answer: "Variable"
-  },
-  {
-    definition: "A choice added to a program using if, elif, and else. The next instruction depends on a condition.",
-    answer: "Selection"
-  },
-  {
-    definition: "Breakdown of a logic circuit listing all possible inputs and resulting outputs.",
-    answer: "Truth table"
-  },
-  {
-    definition: "Error that allows a program to run but prevents it from producing the expected output.",
-    answer: "Logic error"
-  },
-  {
-    definition: "Error in program code that stops a program from running, such as a missing quotation mark or misspelled function.",
-    answer: "Syntax error"
-  },
-  {
-    definition: "Error that occurs while a program is running because instructions cannot be completed.",
-    answer: "Runtime error"
-  },
-  {
-    definition: "Code that includes a condition and runs different code depending on whether the condition is TRUE or FALSE.",
-    answer: "Conditional statement"
-  },
-  {
-    definition: "The order that program code needs to be in to work correctly.",
-    answer: "Sequence"
-  },
-  {
-    definition: "Carry out the instructions described in a computer program.",
-    answer: "Execute"
-  },
-  {
-    definition: "Set of instructions repeated a set number of times.",
-    answer: "Count controlled loop"
-  },
-  {
-    definition: "One way to create a count-controlled loop in Python or MicroPython.",
-    answer: "For loop"
-  },
-  {
-    definition: "The efficiency of a program can be measured by how quickly it runs.",
-    answer: "Efficient"
-  },
-  {
-    definition: "A collection of items stored under one identifier in a particular order. The items must all be the same data type.",
-    answer: "Array"
-  },
-  {
-    definition: "A type of array that stores items in a single line and gives each item a position number called an index.",
-    answer: "One dimensional array"
-  },
-  {
-    definition: "Data of the correct type that should be accepted by a program, such as -10, 70, and 99 when testing if a < 100.",
-    answer: "Normal test data"
-  },
-  {
-    definition: "Acceptable input at the ends of the possible input range, such as -999999 and 99 when testing if a < 100.",
-    answer: "Extreme test data"
-  },
-  {
-    definition: "Data that should be rejected by a program, such as 150 and 700 when testing if a < 100.",
-    answer: "Invalid test data"
-  },
-  {
-    definition: "Device that has one circuit containing the input, process, and output functions of a computer.",
-    answer: "Microprocessor"
-  },
-  {
-    definition: "Raw information, values, facts, and figures.",
-    answer: "Data"
-  },
-  {
-    definition: "Detects a change in direction of a device.",
-    answer: "Accelerometer"
-  },
-  {
-    definition: "Specific rules used in a programming language.",
-    answer: "Syntax"
-  }
-];
+  <script>
+    const questions = [
+      {
+        definition: "Sequential method of searching a list from start to end, checking each element in turn.",
+        answer: "Linear search"
+      },
+      {
+        definition: "Divide-and-conquer algorithm that splits an array in half each iteration, checking the middle value to determine whether it is higher, lower, or the required value.",
+        answer: "Binary search"
+      },
+      {
+        definition: "A visual representation of an algorithm.",
+        answer: "Flowchart"
+      },
+      {
+        definition: "Ability of a computer system to do human-like behaviour, such as learning and developing its own programming from experience.",
+        answer: "Artificial intelligence AI"
+      },
+      {
+        definition: "Ability of a computer system to learn over time.",
+        answer: "Machine learning"
+      },
+      {
+        definition: "Classification applied to a data item specifying which type of data that item represents, such as currency, text, or number.",
+        answer: "Data type"
+      },
+      {
+        definition: "Instructions that tell a computer system how to complete a task.",
+        answer: "Program"
+      },
+      {
+        definition: "Step-by-step instructions to solve a particular problem.",
+        answer: "Algorithm"
+      },
+      {
+        definition: "A data type: a sequence of characters that can be text, numbers, or symbols. Quotation marks define it as a string.",
+        answer: "String"
+      },
+      {
+        definition: "A data type: a whole number, such as 5, 0, or -999.",
+        answer: "Integer"
+      },
+      {
+        definition: "A data type: a decimal number, also known as a float.",
+        answer: "Real"
+      },
+      {
+        definition: "Joining two strings together.",
+        answer: "Concatenation"
+      },
+      {
+        definition: "Change the data type of a variable.",
+        answer: "Cast"
+      },
+      {
+        definition: "A textual representation of an algorithm that focuses on the algorithm rather than a programming language.",
+        answer: "Pseudocode"
+      },
+      {
+        definition: "Document that details the tests to be carried out, expected results, and whether the tests were successful.",
+        answer: "Test plan"
+      },
+      {
+        definition: "Tasks or features a user expects an application to be able to do or help with.",
+        answer: "User requirements"
+      },
+      {
+        definition: "Initial product created for testing and reviewing before a final product is released.",
+        answer: "Prototype"
+      },
+      {
+        definition: "Repeat, repeated, or repetition.",
+        answer: "Iteration"
+      },
+      {
+        definition: "Technique for predicting step by step what will happen as each line of an algorithm or program runs, and identifying errors.",
+        answer: "Trace table"
+      },
+      {
+        definition: "Named memory location that can store a value.",
+        answer: "Variable"
+      },
+      {
+        definition: "A choice added to a program using if, elif, and else. The next instruction depends on a condition.",
+        answer: "Selection"
+      },
+      {
+        definition: "Breakdown of a logic circuit listing all possible inputs and resulting outputs.",
+        answer: "Truth table"
+      },
+      {
+        definition: "Error that allows a program to run but prevents it from producing the expected output.",
+        answer: "Logic error"
+      },
+      {
+        definition: "Error in program code that stops a program from running, such as a missing quotation mark or misspelled function.",
+        answer: "Syntax error"
+      },
+      {
+        definition: "Error that occurs while a program is running because instructions cannot be completed.",
+        answer: "Runtime error"
+      },
+      {
+        definition: "Code that includes a condition and runs different code depending on whether the condition is TRUE or FALSE.",
+        answer: "Conditional statement"
+      },
+      {
+        definition: "The order that program code needs to be in to work correctly.",
+        answer: "Sequence"
+      },
+      {
+        definition: "Carry out the instructions described in a computer program.",
+        answer: "Execute"
+      },
+      {
+        definition: "Set of instructions repeated a set number of times.",
+        answer: "Count controlled loop"
+      },
+      {
+        definition: "One way to create a count-controlled loop in Python or MicroPython.",
+        answer: "For loop"
+      },
+      {
+        definition: "The efficiency of a program can be measured by how quickly it runs.",
+        answer: "Efficient"
+      },
+      {
+        definition: "A collection of items stored under one identifier in a particular order. The items must all be the same data type.",
+        answer: "Array"
+      },
+      {
+        definition: "A type of array that stores items in a single line and gives each item a position number called an index.",
+        answer: "One dimensional array"
+      },
+      {
+        definition: "Data of the correct type that should be accepted by a program, such as -10, 70, and 99 when testing if a < 100.",
+        answer: "Normal test data"
+      },
+      {
+        definition: "Acceptable input at the ends of the possible input range, such as -999999 and 99 when testing if a < 100.",
+        answer: "Extreme test data"
+      },
+      {
+        definition: "Data that should be rejected by a program, such as 150 and 700 when testing if a < 100.",
+        answer: "Invalid test data"
+      },
+      {
+        definition: "Device that has one circuit containing the input, process, and output functions of a computer.",
+        answer: "Microprocessor"
+      },
+      {
+        definition: "Raw information, values, facts, and figures.",
+        answer: "Data"
+      },
+      {
+        definition: "Detects a change in direction of a device.",
+        answer: "Accelerometer"
+      },
+      {
+        definition: "Specific rules used in a programming language.",
+        answer: "Syntax"
+      }
+    ];
 
-let currentQuestion = 0;
-let score = 0;
-let streak = 0;
-let hasAnswered = false;
+    let currentQuestion = 0;
+    let score = 0;
+    let streak = 0;
+    let hasAnswered = false;
 
-const definitionElement = document.getElementById("definition");
-const answerArea = document.getElementById("answerArea");
-const answerLengthElement = document.getElementById("answerLength");
-const messageElement = document.getElementById("message");
-const questionNumberElement = document.getElementById("questionNumber");
-const scoreElement = document.getElementById("score");
-const streakElement = document.getElementById("streak");
-const shootButton = document.getElementById("shootButton");
-const nextButton = document.getElementById("nextButton");
-const resetButton = document.getElementById("resetButton");
-const duck = document.getElementById("duck");
-const dog = document.getElementById("dog");
+    const definitionElement =
+      document.getElementById("definition");
 
-function cleanAnswer(answer) {
-  return answer.toLowerCase().replace(/[^a-z]/g, "");
-}
+    const answerArea =
+      document.getElementById("answerArea");
 
-function displayAnswerLength(answer) {
-  return cleanAnswer(answer).length;
-}
+    const answerLengthElement =
+      document.getElementById("answerLength");
 
-function loadQuestion() {
-  const question = questions[currentQuestion];
-  const answer = cleanAnswer(question.answer);
+    const messageElement =
+      document.getElementById("message");
 
-  definitionElement.textContent = question.definition;
-  answerLengthElement.textContent = answer.length;
-  questionNumberElement.textContent = currentQuestion + 1;
+    const questionNumberElement =
+      document.getElementById("questionNumber");
 
-  answerArea.innerHTML = "";
+    const scoreElement =
+      document.getElementById("score");
 
-  /*
-    Spaces are not given boxes because the number of boxes represents
-    the number of letters. A small gap is added between words.
-  */
-  let letterIndex = 0;
+    const streakElement =
+      document.getElementById("streak");
 
-  for (const character of question.answer) {
-    if (/[a-z]/i.test(character)) {
-      const input = document.createElement("input");
+    const shootButton =
+      document.getElementById("shootButton");
 
-      input.type = "text";
-      input.maxLength = 1;
-      input.className = "letter-box";
-      input.dataset.index = letterIndex;
-      input.autocomplete = "off";
-      input.setAttribute("aria-label", `Letter ${letterIndex + 1}`);
+    const nextButton =
+      document.getElementById("nextButton");
 
-      input.addEventListener("input", function () {
-        this.value = this.value
-          .replace(/[^a-z]/gi, "")
-          .toUpperCase();
+    const resetButton =
+      document.getElementById("resetButton");
 
-        if (this.value) {
-          const nextInput = answerArea.querySelector(
-            `.letter-box[data-index="${letterIndex + 1}"]`
-          );
+    const duck =
+      document.getElementById("duck");
 
-          if (nextInput) {
-            nextInput.focus();
-          }
-        }
-      });
+    const dog =
+      document.getElementById("dog");
 
-      input.addEventListener("keydown", function (event) {
-        if (event.key === "Backspace" && !this.value) {
-          const previousInput = answerArea.querySelector(
-            `.letter-box[data-index="${letterIndex - 1}"]`
-          );
 
-          if (previousInput) {
-            previousInput.focus();
-          }
-        }
-
-        if (event.key === "Enter") {
-          checkAnswer();
-        }
-      });
-
-      answerArea.appendChild(input);
-      letterIndex++;
-    } else if (character === " ") {
-      const gap = document.createElement("span");
-      gap.className = "space";
-      answerArea.appendChild(gap);
+    function cleanAnswer(answer) {
+      return answer
+        .toLowerCase()
+        .replace(/[^a-z]/g, "");
     }
-  }
 
-  duck.className = "duck";
-  duck.textContent = "🦆";
 
-  dog.className = "dog";
-  dog.textContent = "🐶";
+    function loadQuestion() {
+      const question = questions[currentQuestion];
+      const answer = cleanAnswer(question.answer);
 
-  messageElement.textContent = "";
-  shootButton.hidden = false;
-  nextButton.hidden = true;
-  hasAnswered = false;
+      definitionElement.textContent = question.definition;
+      answerLengthElement.textContent = answer.length;
+      questionNumberElement.textContent = currentQuestion + 1;
 
-  const firstInput = answerArea.querySelector(".letter-box");
-  if (firstInput) {
-    firstInput.focus();
-  }
-}
+      answerArea.innerHTML = "";
 
-function getUserAnswer() {
-  return [...answerArea.querySelectorAll(".letter-box")]
-    .map(input => input.value.toLowerCase())
-    .join("");
-}
+      let letterIndex = 0;
 
-function checkAnswer() {
-  if (hasAnswered) return;
+      for (const character of question.answer) {
+        if (/[a-z]/i.test(character)) {
+          const input = document.createElement("input");
 
-  const correctAnswer = cleanAnswer(questions[currentQuestion].answer);
-  const userAnswer = getUserAnswer();
+          input.type = "text";
+          input.maxLength = 1;
+          input.className = "letter-box";
+          input.dataset.index = letterIndex;
+          input.autocomplete = "off";
+          input.setAttribute(
+            "aria-label",
+            `Letter ${letterIndex + 1}`
+          );
 
-  if (userAnswer.length !== correctAnswer.length) {
-    messageElement.textContent =
-      `Please fill in all ${correctAnswer.length} boxes.`;
-    messageElement.style.color = "#b35b00";
-    return;
-  }
+          input.addEventListener("input", function () {
+            this.value = this.value
+              .replace(/[^a-z]/gi, "")
+              .toUpperCase();
 
-  hasAnswered = true;
-  shootButton.hidden = true;
-  nextButton.hidden = false;
+            if (this.value.length === 1) {
+              const currentIndex =
+                Number(this.dataset.index);
 
-  if (userAnswer === correctAnswer) {
-    score++;
-    streak++;
+              const nextInput =
+                answerArea.querySelector(
+                  `.letter-box[data-index="${currentIndex + 1}"]`
+                );
 
-    scoreElement.textContent = score;
-    streakElement.textContent = streak;
+              if (nextInput) {
+                nextInput.focus();
+              }
+            }
+          });
 
-    messageElement.textContent =
-      "🎯 Correct! You shot the duck! The dog is retrieving it.";
-    messageElement.style.color = "#16803c";
+          input.addEventListener("keydown", function (event) {
+            if (event.key === "Backspace" && !this.value) {
+              const currentIndex =
+                Number(this.dataset.index);
 
-    duck.className = "duck shot";
-    dog.className = "dog retrieve";
-  } else {
-    streak = 0;
-    streakElement.textContent = streak;
+              const previousInput =
+                answerArea.querySelector(
+                  `.letter-box[data-index="${currentIndex - 1}"]`
+                );
 
-    messageElement.textContent =
-      `❌ Not quite. The correct answer was: ${questions[currentQuestion].answer}`;
-    messageElement.style.color = "#bd2020";
+              if (previousInput) {
+                previousInput.focus();
+              }
+            }
 
-    duck.className = "duck fly-away";
-    dog.className = "dog laughing";
-  }
-}
+            if (event.key === "Enter") {
+              checkAnswer();
+            }
+          });
 
-function nextQuestion() {
-  if (currentQuestion < questions.length - 1) {
-    currentQuestion++;
+          answerArea.appendChild(input);
+          letterIndex++;
+        } else if (character === " ") {
+          const gap = document.createElement("span");
+          gap.className = "space";
+          answerArea.appendChild(gap);
+        }
+      }
+
+      duck.className = "duck";
+      duck.style.display = "block";
+      duck.textContent = "🦆";
+
+      dog.className = "dog";
+
+      messageElement.textContent = "";
+      messageElement.style.color = "";
+
+      shootButton.hidden = false;
+      nextButton.hidden = true;
+      hasAnswered = false;
+
+      const firstInput =
+        answerArea.querySelector(".letter-box");
+
+      if (firstInput) {
+        firstInput.focus();
+      }
+    }
+
+
+    function getUserAnswer() {
+      return [...answerArea.querySelectorAll(".letter-box")]
+        .map(input => input.value.toLowerCase())
+        .join("");
+    }
+
+
+    function checkAnswer() {
+      if (hasAnswered) return;
+
+      const correctAnswer =
+        cleanAnswer(questions[currentQuestion].answer);
+
+      const userAnswer = getUserAnswer();
+
+      if (userAnswer.length !== correctAnswer.length) {
+        messageElement.textContent =
+          `Please fill in all ${correctAnswer.length} boxes.`;
+
+        messageElement.style.color = "#b35b00";
+        return;
+      }
+
+      hasAnswered = true;
+      shootButton.hidden = true;
+
+      if (userAnswer === correctAnswer) {
+        score++;
+        streak++;
+
+        scoreElement.textContent = score;
+        streakElement.textContent = streak;
+
+        messageElement.textContent =
+          "✅ Correct! The dog retrieved the duck!";
+
+        messageElement.style.color = "#218838";
+
+        // Make the duck fall when shot
+        duck.className = "duck shot";
+
+        // Restart the dog animation
+        dog.className = "dog";
+        void dog.offsetWidth;
+        dog.className = "dog show";
+
+        // Load the next question automatically
+        setTimeout(() => {
+          nextQuestion();
+        }, 1800);
+      } else {
+        streak = 0;
+        streakElement.textContent = streak;
+
+        messageElement.textContent =
+          `❌ Incorrect. The correct answer is: ${
+            questions[currentQuestion].answer
+          }`;
+
+        messageElement.style.color = "#c62828";
+
+        // Allow another attempt
+        hasAnswered = false;
+        shootButton.hidden = false;
+      }
+    }
+
+
+    function nextQuestion() {
+      if (currentQuestion < questions.length - 1) {
+        currentQuestion++;
+        loadQuestion();
+      } else {
+        definitionElement.textContent = "Game complete!";
+        answerArea.innerHTML = "";
+        answerLengthElement.textContent = "—";
+
+        messageElement.textContent =
+          `🏆 Final score: ${score} out of ${questions.length}`;
+
+        messageElement.style.color = "#173b5d";
+
+        shootButton.hidden = true;
+        nextButton.hidden = true;
+        duck.style.display = "none";
+        dog.className = "dog";
+      }
+    }
+
+
+    function restartGame() {
+      currentQuestion = 0;
+      score = 0;
+      streak = 0;
+
+      scoreElement.textContent = score;
+      streakElement.textContent = streak;
+
+      loadQuestion();
+    }
+
+
+    shootButton.addEventListener("click", checkAnswer);
+    nextButton.addEventListener("click", nextQuestion);
+    resetButton.addEventListener("click", restartGame);
+
     loadQuestion();
-  } else {
-    definitionElement.textContent = "Game complete!";
-    answerArea.innerHTML = "";
-    answerLengthElement.textContent = "—";
-    messageElement.textContent =
-      `🏆 Final score: ${score} out of ${questions.length}`;
-    messageElement.style.color = "#173b5d";
-    shootButton.hidden = true;
-    nextButton.hidden = true;
-    duck.style.display = "none";
-  }
-}
-
-function restartGame() {
-  currentQuestion = 0;
-  score = 0;
-  streak = 0;
-
-  scoreElement.textContent = score;
-  streakElement.textContent = streak;
-  duck.style.display = "block";
-
-  loadQuestion();
-}
-
-shootButton.addEventListener("click", checkAnswer);
-nextButton.addEventListener("click", nextQuestion);
-resetButton.addEventListener("click", restartGame);
-
-loadQuestion();
-</script>
-
+  </script>
 </body>
 </html>
