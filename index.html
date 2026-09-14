@@ -1,139 +1,815 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Who Wants to Be a Millionaire?</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Who Wants to Be a Millionaire?</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  background:
+    radial-gradient(circle at center, #173b91 0%, #07133f 45%, #020817 100%);
+}
+
+.game {
+  width: 100%;
+  max-width: 1200px;
+  min-height: 100vh;
+  margin: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  margin: 5px 0 15px;
+  color: #ffd700;
+  text-align: center;
+  font-size: clamp(28px, 5vw, 48px);
+  text-shadow: 0 0 12px #ffd700;
+}
+
+.logo {
+  width: 110px;
+  height: 110px;
+  border: 6px solid #ffd700;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 1.1;
+  color: #ffd700;
+  margin-bottom: 15px;
+  box-shadow: 0 0 25px #ffd700;
+}
+
+.main {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 250px;
+  gap: 20px;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.question-number {
+  color: #ffd700;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px;
+}
+
+.question {
+  width: 100%;
+  max-width: 850px;
+  min-height: 100px;
+  padding: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: clamp(20px, 3vw, 30px);
+  font-weight: bold;
+  background: linear-gradient(#173d91, #081c56);
+  border: 3px solid #ffd700;
+  border-radius: 18px;
+  box-shadow: 0 0 15px #173d91;
+}
+
+.answers {
+  width: 100%;
+  max-width: 850px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.answer {
+  min-height: 70px;
+  padding: 15px;
+  border: 2px solid #8eb4ff;
+  border-radius: 14px;
+  background: linear-gradient(#173d91, #081c56);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.answer:hover:not(:disabled) {
+  background: #285dc4;
+  border-color: #ffd700;
+  transform: scale(1.02);
+}
+
+.answer:disabled {
+  cursor: default;
+}
+
+.answer.correct {
+  background: #16843c;
+  border-color: #54ff8a;
+}
+
+.answer.wrong {
+  background: #a51d2d;
+  border-color: #ff6878;
+}
+
+.lifelines {
+  width: 100%;
+  max-width: 850px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.lifeline {
+  padding: 12px 18px;
+  border: 2px solid #ffd700;
+  border-radius: 25px;
+  background: #102d76;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.lifeline:hover:not(:disabled) {
+  background: #285dc4;
+}
+
+.lifeline:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.money-ladder {
+  padding: 15px;
+  border: 2px solid #ffd700;
+  border-radius: 15px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.money-ladder h2 {
+  margin: 0 0 10px;
+  text-align: center;
+  color: #ffd700;
+  font-size: 22px;
+}
+
+.prize {
+  padding: 6px 12px;
+  color: #ffd700;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.prize.current {
+  background: #d28a00;
+  color: white;
+}
+
+.prize.safe {
+  color: white;
+}
+
+.message {
+  min-height: 30px;
+  margin-top: 18px;
+  color: #ffd700;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.start-screen,
+.game-over {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: rgba(0, 5, 25, 0.94);
+}
+
+.start-box,
+.over-box {
+  width: 100%;
+  max-width: 600px;
+  padding: 35px;
+  border: 3px solid #ffd700;
+  border-radius: 20px;
+  background: linear-gradient(#173d91, #081c56);
+  text-align: center;
+  box-shadow: 0 0 30px #ffd700;
+}
+
+.start-box h2,
+.over-box h2 {
+  margin-top: 0;
+  color: #ffd700;
+  font-size: 32px;
+}
+
+.start-box p,
+.over-box p {
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.start-button,
+.restart-button {
+  padding: 15px 35px;
+  border: 0;
+  border-radius: 30px;
+  background: #ffd700;
+  color: #07133f;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.start-button:hover,
+.restart-button:hover {
+  background: white;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .main {
+    grid-template-columns: 1fr;
+  }
+
+  .money-ladder {
+    order: -1;
+    width: 100%;
+  }
+
+  .prize {
+    display: inline-block;
+    margin: 3px;
+  }
+}
+
+@media (max-width: 550px) {
+  .answers {
+    grid-template-columns: 1fr;
+  }
+
+  .question {
+    padding: 18px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+  <div class="logo">WHO WANTS<br>TO BE A<br>MILLIONAIRE?</div>
+
+  <h1>Who Wants to Be a Millionaire?</h1>
+
+  <div class="main">
+    <section class="left">
+      <div class="question-number" id="questionNumber"></div>
+      <div class="question" id="question"></div>
+
+      <div class="answers" id="answers"></div>
+
+      <div class="lifelines">
+        <button class="lifeline" id="fiftyButton">50/50</button>
+        <button class="lifeline" id="friendButton">☎ Call a Friend</button>
+        <button class="lifeline" id="audienceButton">👥 Ask the Audience</button>
+      </div>
+
+      <div class="message" id="message"></div>
+    </section>
+
+    <aside class="money-ladder">
+      <h2>Prize Money</h2>
+      <div id="ladder"></div>
+    </aside>
+  </div>
+</div>
+
+<div class="start-screen" id="startScreen">
+  <div class="start-box">
+    <h2>Welcome!</h2>
+    <p>
+      Answer 15 questions correctly to win £1,000,000.
+      You have three lifelines available.
+    </p>
+    <button class="start-button" id="startButton">Start Game</button>
+  </div>
+</div>
+
+<div class="game-over hidden" id="gameOver">
+  <div class="over-box">
+    <h2 id="gameOverTitle">Game Over</h2>
+    <p id="gameOverText"></p>
+    <button class="restart-button" id="restartButton">Play Again</button>
+  </div>
+</div>
+
+<script>
+const prizes = [
+  "£100",
+  "£200",
+  "£300",
+  "£500",
+  "£1,000",
+  "£2,000",
+  "£4,000",
+  "£8,000",
+  "£16,000",
+  "£32,000",
+  "£64,000",
+  "£125,000",
+  "£250,000",
+  "£500,000",
+  "£1,000,000"
+];
+
+const questions = [
+  {
+    question: "What is the capital city of France?",
+    answers: ["Madrid", "Paris", "Rome", "Berlin"],
+    correct: "Paris"
+  },
+  {
+    question: "How many days are there in a leap year?",
+    answers: ["365", "366", "364", "367"],
+    correct: "366"
+  },
+  {
+    question: "Which planet is known as the Red Planet?",
+    answers: ["Venus", "Mars", "Jupiter", "Mercury"],
+    correct: "Mars"
+  },
+  {
+    question: "What is the largest ocean on Earth?",
+    answers: ["Atlantic Ocean", "Indian Ocean", "Pacific Ocean", "Arctic Ocean"],
+    correct: "Pacific Ocean"
+  },
+  {
+    question: "Who wrote Romeo and Juliet?",
+    answers: ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
+    correct: "William Shakespeare"
+  },
+  {
+    question: "What is the chemical symbol for gold?",
+    answers: ["Go", "Gd", "Au", "Ag"],
+    correct: "Au"
+  },
+  {
+    question: "How many sides does a hexagon have?",
+    answers: ["Five", "Six", "Seven", "Eight"],
+    correct: "Six"
+  },
+  {
+    question: "Which animal is known as the king of the jungle?",
+    answers: ["Tiger", "Elephant", "Lion", "Gorilla"],
+    correct: "Lion"
+  },
+  {
+    question: "What is the smallest prime number?",
+    answers: ["0", "1", "2", "3"],
+    correct: "2"
+  },
+  {
+    question: "Which country gifted the Statue of Liberty to the United States?",
+    answers: ["France", "Canada", "Spain", "Italy"],
+    correct: "France"
+  },
+  {
+    question: "What is H2O commonly known as?",
+    answers: ["Oxygen", "Hydrogen", "Water", "Salt"],
+    correct: "Water"
+  },
+  {
+    question: "Which instrument has black and white keys?",
+    answers: ["Guitar", "Piano", "Violin", "Trumpet"],
+    correct: "Piano"
+  },
+  {
+    question: "How many continents are there?",
+    answers: ["Five", "Six", "Seven", "Eight"],
+    correct: "Seven"
+  },
+  {
+    question: "Which gas do humans need to breathe?",
+    answers: ["Carbon dioxide", "Oxygen", "Helium", "Nitrogen"],
+    correct: "Oxygen"
+  },
+  {
+    question: "What is the fastest land animal?",
+    answers: ["Lion", "Cheetah", "Horse", "Leopard"],
+    correct: "Cheetah"
+  },
+  {
+    question: "Which sport uses a shuttlecock?",
+    answers: ["Tennis", "Badminton", "Cricket", "Hockey"],
+    correct: "Badminton"
+  },
+  {
+    question: "What is the main language spoken in Brazil?",
+    answers: ["Spanish", "Portuguese", "French", "English"],
+    correct: "Portuguese"
+  },
+  {
+    question: "Which organ pumps blood around the body?",
+    answers: ["Brain", "Lung", "Heart", "Liver"],
+    correct: "Heart"
+  },
+  {
+    question: "What is the square root of 144?",
+    answers: ["10", "11", "12", "14"],
+    correct: "12"
+  },
+  {
+    question: "Which famous detective was created by Arthur Conan Doyle?",
+    answers: ["Hercule Poirot", "Sherlock Holmes", "Miss Marple", "James Bond"],
+    correct: "Sherlock Holmes"
+  },
+  {
+    question: "Which planet is closest to the Sun?",
+    answers: ["Earth", "Venus", "Mercury", "Mars"],
+    correct: "Mercury"
+  },
+  {
+    question: "What is the hardest natural substance?",
+    answers: ["Iron", "Diamond", "Granite", "Quartz"],
+    correct: "Diamond"
+  },
+  {
+    question: "Which country is famous for the pyramids at Giza?",
+    answers: ["Greece", "Egypt", "Mexico", "Peru"],
+    correct: "Egypt"
+  },
+  {
+    question: "How many players are on a football team on the pitch?",
+    answers: ["Nine", "Ten", "Eleven", "Twelve"],
+    correct: "Eleven"
+  },
+  {
+    question: "What is the boiling point of water at sea level?",
+    answers: ["50°C", "75°C", "100°C", "150°C"],
+    correct: "100°C"
+  },
+  {
+    question: "Who painted the Mona Lisa?",
+    answers: ["Vincent van Gogh", "Leonardo da Vinci", "Pablo Picasso", "Michelangelo"],
+    correct: "Leonardo da Vinci"
+  },
+  {
+    question: "Which is the largest planet in our solar system?",
+    answers: ["Saturn", "Earth", "Jupiter", "Neptune"],
+    correct: "Jupiter"
+  },
+  {
+    question: "What is the currency of Japan?",
+    answers: ["Yuan", "Won", "Yen", "Rupee"],
+    correct: "Yen"
+  },
+  {
+    question: "Which bird is often associated with delivering messages?",
+    answers: ["Eagle", "Pigeon", "Owl", "Swan"],
+    correct: "Pigeon"
+  },
+  {
+    question: "How many minutes are in one hour?",
+    answers: ["30", "45", "60", "90"],
+    correct: "60"
+  },
+  {
+    question: "Which sea creature has eight arms?",
+    answers: ["Squid", "Octopus", "Crab", "Starfish"],
+    correct: "Octopus"
+  },
+  {
+    question: "What is the largest mammal in the world?",
+    answers: ["Elephant", "Blue whale", "Giraffe", "Hippopotamus"],
+    correct: "Blue whale"
+  },
+  {
+    question: "Which month comes after September?",
+    answers: ["August", "October", "November", "December"],
+    correct: "October"
+  },
+  {
+    question: "What is the freezing point of water?",
+    answers: ["0°C", "10°C", "32°C", "100°C"],
+    correct: "0°C"
+  },
+  {
+    question: "Which country is shaped like a boot?",
+    answers: ["Italy", "Portugal", "Norway", "India"],
+    correct: "Italy"
+  },
+  {
+    question: "What is the name of our galaxy?",
+    answers: ["Andromeda", "Milky Way", "Whirlpool", "Sombrero"],
+    correct: "Milky Way"
+  },
+  {
+    question: "Which famous wizard attends Hogwarts?",
+    answers: ["Gandalf", "Harry Potter", "Merlin", "Dumbledore"],
+    correct: "Harry Potter"
+  },
+  {
+    question: "How many colours are in a traditional rainbow?",
+    answers: ["Five", "Six", "Seven", "Eight"],
+    correct: "Seven"
+  },
+  {
+    question: "Which material is made from trees?",
+    answers: ["Glass", "Paper", "Steel", "Plastic"],
+    correct: "Paper"
+  },
+  {
+    question: "What is the opposite of ancient?",
+    answers: ["Old", "Modern", "Historic", "Past"],
+    correct: "Modern"
+  },
+  {
+    question: "Which famous ship sank in 1912?",
+    answers: ["Titanic", "Mayflower", "Beagle", "Endeavour"],
+    correct: "Titanic"
+  }
+];
+
+let gameQuestions = [];
+let currentQuestion = 0;
+let usedFifty = false;
+let usedFriend = false;
+let usedAudience = false;
+let acceptingAnswer = false;
+
+const questionNumber = document.getElementById("questionNumber");
+const questionElement = document.getElementById("question");
+const answersElement = document.getElementById("answers");
+const messageElement = document.getElementById("message");
+const ladderElement = document.getElementById("ladder");
+
+const startScreen = document.getElementById("startScreen");
+const gameOver = document.getElementById("gameOver");
+const gameOverTitle = document.getElementById("gameOverTitle");
+const gameOverText = document.getElementById("gameOverText");
+
+const startButton = document.getElementById("startButton");
+const restartButton = document.getElementById("restartButton");
+const fiftyButton = document.getElementById("fiftyButton");
+const friendButton = document.getElementById("friendButton");
+const audienceButton = document.getElementById("audienceButton");
+
+function shuffle(array) {
+  return [...array].sort(() => Math.random() - 0.5);
+}
+
+function createLadder() {
+  ladderElement.innerHTML = "";
+
+  [...prizes].reverse().forEach((prize, index) => {
+    const actualIndex = prizes.length - 1 - index;
+    const div = document.createElement("div");
+
+    div.className = "prize";
+    div.id = "prize-" + actualIndex;
+    div.textContent = `${actualIndex + 1}. ${prize}`;
+
+    if (actualIndex === 4 || actualIndex === 9) {
+      div.classList.add("safe");
     }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: Arial, sans-serif;
-      color: #19324d;
-      background: radial-gradient(circle at top, #263b91, #10152f 65%);
-    }
+    ladderElement.appendChild(div);
+  });
+}
 
-    .game {
-      width: min(1000px, 94%);
-      margin: 0 auto;
-      padding: 20px 0 40px;
-      text-align: center;
-    }
+function startGame() {
+  gameQuestions = shuffle(questions).slice(0, 15);
+  currentQuestion = 0;
+  usedFifty = false;
+  usedFriend = false;
+  usedAudience = false;
 
-    h1 {
-      margin: 8px 0;
-      color: #ffca28;
-      text-shadow: 2px 2px #000;
-    }
+  fiftyButton.disabled = false;
+  friendButton.disabled = false;
+  audienceButton.disabled = false;
 
-    .subtitle {
-      margin: 0 0 15px;
-      color: white;
-      font-weight: bold;
-    }
+  startScreen.classList.add("hidden");
+  gameOver.classList.add("hidden");
 
-    .scoreboard {
-      display: flex;
-      justify-content: center;
-      gap: 25px;
-      flex-wrap: wrap;
-      margin: 15px auto;
-      color: white;
-      font-size: 1.1rem;
-      font-weight: bold;
-    }
+  createLadder();
+  showQuestion();
+}
 
-    .definition-card {
-      padding: 22px;
-      background: rgba(255, 255, 255, 0.97);
-      border: 4px solid #ffca28;
-      border-radius: 18px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
-    }
+function showQuestion() {
+  acceptingAnswer = true;
+  messageElement.textContent = "";
 
-    .money-ladder {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 5px;
-      margin-bottom: 18px;
-    }
+  const current = gameQuestions[currentQuestion];
 
-    .money-level {
-      padding: 5px 8px;
-      border-radius: 6px;
-      background: #e5e5e5;
-      color: #555;
-      font-size: 0.8rem;
-      font-weight: bold;
-    }
+  questionNumber.textContent =
+    `Question ${currentQuestion + 1} of 15 — For ${prizes[currentQuestion]}`;
 
-    .money-level.current {
-      background: #ffca28;
-      color: #173b5d;
-      transform: scale(1.1);
-    }
+  questionElement.textContent = current.question;
+  answersElement.innerHTML = "";
 
-    .money-level.completed {
-      background: #43a047;
-      color: white;
-    }
+  const shuffledAnswers = shuffle(current.answers);
 
-    #definition {
-      min-height: 90px;
-      font-size: clamp(1.05rem, 2vw, 1.35rem);
-      line-height: 1.5;
-    }
+  shuffledAnswers.forEach(answer => {
+    const button = document.createElement("button");
 
-    .lifelines {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 18px 0;
-    }
+    button.className = "answer";
+    button.textContent = answer;
+    button.dataset.answer = answer;
 
-    button {
-      margin: 5px;
-      padding: 12px 18px;
-      border: 0;
-      border-radius: 10px;
-      background: #286090;
-      color: white;
-      box-shadow: 0 4px 0 #173b5d;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: bold;
-    }
+    button.addEventListener("click", () => chooseAnswer(button, answer));
 
-    button:hover {
-      filter: brightness(1.12);
-    }
+    answersElement.appendChild(button);
+  });
 
-    button:active {
-      transform: translateY(3px);
-      box-shadow: 0 1px 0 #173b5d;
-    }
+  document.querySelectorAll(".prize").forEach(prize => {
+    prize.classList.remove("current");
+  });
 
-    button:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-      filter: none;
-    }
+  document
+    .getElementById("prize-" + currentQuestion)
+    .classList.add("current");
+}
 
-    .lifelines button {
-      background: #6a1b9a;
-      box-shadow: 0 4px 0 #421064;
-    }
+function chooseAnswer(button, answer) {
+  if (!acceptingAnswer) return;
 
-    #resetButton {
-      background: #777;
-      box-shadow: 0 4px 0 #444;
-    }
+  acceptingAnswer = false;
 
-    .ans
+  const correctAnswer = gameQuestions[currentQuestion].correct;
+  const allButtons = document.querySelectorAll(".answer");
+
+  allButtons.forEach(btn => {
+    btn.disabled = true;
+
+    if (btn.dataset.answer === correctAnswer) {
+      btn.classList.add("correct");
+    }
+  });
+
+  if (answer === correctAnswer) {
+    button.classList.add("correct");
+    messageElement.textContent = "Correct!";
+
+    if (currentQuestion === 14) {
+      setTimeout(() => {
+        finishGame(
+          "Congratulations!",
+          "You answered all 15 questions correctly and won £1,000,000!"
+        );
+      }, 1200);
+    } else {
+      currentQuestion++;
+
+      setTimeout(() => {
+        showQuestion();
+      }, 1200);
+    }
+  } else {
+    button.classList.add("wrong");
+
+    setTimeout(() => {
+      finishGame(
+        "Game Over",
+        `That answer was incorrect. The correct answer was "${correctAnswer}". You won ${getWinnings()}.`
+      );
+    }, 1200);
+  }
+}
+
+function getWinnings() {
+  if (currentQuestion === 0) return "£0";
+
+  if (currentQuestion >= 10) {
+    return prizes[9];
+  }
+
+  if (currentQuestion >= 5) {
+    return prizes[4];
+  }
+
+  return "£0";
+}
+
+function finishGame(title, text) {
+  gameOverTitle.textContent = title;
+  gameOverText.textContent = text;
+  gameOver.classList.remove("hidden");
+}
+
+function useFiftyFifty() {
+  if (usedFifty || !acceptingAnswer) return;
+
+  usedFifty = true;
+  fiftyButton.disabled = true;
+
+  const correctAnswer = gameQuestions[currentQuestion].correct;
+  const incorrectButtons = [...document.querySelectorAll(".answer")]
+    .filter(button => button.dataset.answer !== correctAnswer);
+
+  shuffle(incorrectButtons)
+    .slice(0, 2)
+    .forEach(button => {
+      button.disabled = true;
+      button.style.visibility = "hidden";
+    });
+
+  messageElement.textContent = "Two incorrect answers have been removed.";
+}
+
+function useFriend() {
+  if (usedFriend || !acceptingAnswer) return;
+
+  usedFriend = true;
+  friendButton.disabled = true;
+
+  const current = gameQuestions[currentQuestion];
+  const isWrongHint = Math.random() < 0.0005;
+
+  let hintAnswer = current.correct;
+
+  if (isWrongHint) {
+    hintAnswer = shuffle(
+      current.answers.filter(answer => answer !== current.correct)
+    )[0];
+  }
+
+  messageElement.textContent =
+    `Your friend thinks the answer is "${hintAnswer}".`;
+}
+
+function useAudience() {
+  if (usedAudience || !acceptingAnswer) return;
+
+  usedAudience = true;
+  audienceButton.disabled = true;
+
+  const current = gameQuestions[currentQuestion];
+  const correctPercentage = Math.floor(Math.random() * 11) + 65;
+  const remaining = 100 - correctPercentage;
+
+  const incorrectAnswers = current.answers.filter(
+    answer => answer !== current.correct
+  );
+
+  const firstIncorrect = Math.floor(Math.random() * remaining);
+  const secondIncorrect = Math.floor(
+    Math.random() * (remaining - firstIncorrect)
+  );
+  const thirdIncorrect =
+    remaining - firstIncorrect - secondIncorrect;
+
+  const results = [
+    `${current.correct}: ${correctPercentage}%`,
+    `${incorrectAnswers[0]}: ${firstIncorrect}%`,
+    `${incorrectAnswers[1]}: ${secondIncorrect}%`,
+    `${incorrectAnswers[2]}: ${thirdIncorrect}%`
+  ];
+
+  messageElement.textContent =
+    "Audience poll — " + shuffle(results).join(" | ");
+}
+
+startButton.addEventListener("click", startGame);
+restartButton.addEventListener("click", startGame);
+fiftyButton.addEventListener("click", useFiftyFifty);
+friendButton.addEventListener("click", useFriend);
+audienceButton.addEventListener("click", useAudience);
+
+createLadder();
+</script>
+
+</body>
+</html>
