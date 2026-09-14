@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Who Wants to Be a Millionaire?</title>
+<title>Who Wants to Be a Millionaire - Programming Edition</title>
 
 <style>
 * {
@@ -13,52 +13,56 @@
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, sans-serif;
   color: white;
-  background:
-    radial-gradient(circle at center, #173b91 0%, #07133f 45%, #020817 100%);
+  background: radial-gradient(circle, #173d91, #061238 70%);
 }
 
 .game {
-  width: 100%;
   max-width: 1200px;
   min-height: 100vh;
   margin: auto;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-h1 {
-  margin: 5px 0 15px;
-  color: #ffd700;
-  text-align: center;
-  font-size: clamp(28px, 5vw, 48px);
-  text-shadow: 0 0 12px #ffd700;
+  padding: 18px;
 }
 
 .logo {
-  width: 110px;
-  height: 110px;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 8px;
   border: 6px solid #ffd700;
   border-radius: 50%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-weight: bold;
-  font-size: 18px;
-  line-height: 1.1;
   color: #ffd700;
-  margin-bottom: 15px;
-  box-shadow: 0 0 25px #ffd700;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.15;
+  text-shadow: 0 0 8px #ffd700;
+  box-shadow: 0 0 25px #ffd700, inset 0 0 20px #071642;
+  background: radial-gradient(circle, #245ac3, #071642);
+}
+
+.logo small {
+  margin-top: 8px;
+  color: white;
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+h1 {
+  margin: 5px 0 18px;
+  color: #ffd700;
+  text-align: center;
+  font-size: clamp(24px, 4vw, 42px);
+  text-shadow: 0 0 10px #ffd700;
 }
 
 .main {
-  width: 100%;
   display: grid;
-  grid-template-columns: 1fr 250px;
+  grid-template-columns: 1fr 235px;
   gap: 20px;
 }
 
@@ -69,92 +73,88 @@ h1 {
 }
 
 .question-number {
+  margin: 8px;
   color: #ffd700;
-  font-size: 20px;
+  font-size: 19px;
   font-weight: bold;
-  margin: 10px;
+  text-align: center;
 }
 
 .question {
   width: 100%;
-  max-width: 850px;
-  min-height: 100px;
-  padding: 25px;
+  min-height: 105px;
+  padding: 22px;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   text-align: center;
-  font-size: clamp(20px, 3vw, 30px);
+  font-size: clamp(19px, 3vw, 28px);
   font-weight: bold;
-  background: linear-gradient(#173d91, #081c56);
   border: 3px solid #ffd700;
   border-radius: 18px;
-  box-shadow: 0 0 15px #173d91;
+  background: linear-gradient(#174394, #081a52);
 }
 
 .answers {
   width: 100%;
-  max-width: 850px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-top: 20px;
+  gap: 14px;
+  margin-top: 18px;
 }
 
 .answer {
-  min-height: 70px;
-  padding: 15px;
+  min-height: 68px;
+  padding: 12px;
   border: 2px solid #8eb4ff;
-  border-radius: 14px;
-  background: linear-gradient(#173d91, #081c56);
+  border-radius: 13px;
   color: white;
-  font-size: 18px;
+  background: linear-gradient(#174394, #081a52);
+  font-size: 17px;
   cursor: pointer;
-  transition: 0.2s;
 }
 
 .answer:hover:not(:disabled) {
-  background: #285dc4;
   border-color: #ffd700;
-  transform: scale(1.02);
+  background: #2b62c9;
+}
+
+.answer.correct {
+  background: #16843c;
+  border-color: #5cff91;
+}
+
+.answer.wrong {
+  background: #a51d2d;
+  border-color: #ff7180;
 }
 
 .answer:disabled {
   cursor: default;
 }
 
-.answer.correct {
-  background: #16843c;
-  border-color: #54ff8a;
-}
-
-.answer.wrong {
-  background: #a51d2d;
-  border-color: #ff6878;
-}
-
 .lifelines {
-  width: 100%;
-  max-width: 850px;
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 25px;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 22px;
 }
 
-.lifeline {
-  padding: 12px 18px;
+.lifeline,
+.start-button,
+.restart-button {
+  padding: 12px 17px;
   border: 2px solid #ffd700;
-  border-radius: 25px;
-  background: #102d76;
+  border-radius: 24px;
   color: white;
+  background: #102d76;
   font-weight: bold;
   cursor: pointer;
 }
 
 .lifeline:hover:not(:disabled) {
-  background: #285dc4;
+  background: #2b62c9;
 }
 
 .lifeline:disabled {
@@ -162,8 +162,18 @@ h1 {
   cursor: not-allowed;
 }
 
+.message {
+  min-height: 32px;
+  margin-top: 16px;
+  color: #ffd700;
+  text-align: center;
+  font-size: 17px;
+  font-weight: bold;
+}
+
 .money-ladder {
-  padding: 15px;
+  height: fit-content;
+  padding: 14px;
   border: 2px solid #ffd700;
   border-radius: 15px;
   background: rgba(0, 0, 0, 0.35);
@@ -171,88 +181,65 @@ h1 {
 
 .money-ladder h2 {
   margin: 0 0 10px;
-  text-align: center;
   color: #ffd700;
-  font-size: 22px;
+  text-align: center;
+  font-size: 21px;
 }
 
 .prize {
-  padding: 6px 12px;
+  padding: 6px 10px;
+  border-radius: 7px;
   color: #ffd700;
-  border-radius: 8px;
   font-weight: bold;
 }
 
 .prize.current {
-  background: #d28a00;
   color: white;
+  background: #c78300;
 }
 
 .prize.safe {
   color: white;
 }
 
-.message {
-  min-height: 30px;
-  margin-top: 18px;
-  color: #ffd700;
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.start-screen,
-.game-over {
+.overlay {
   position: fixed;
   inset: 0;
-  z-index: 10;
+  z-index: 5;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   padding: 20px;
-  background: rgba(0, 5, 25, 0.94);
+  background: rgba(0, 5, 25, 0.95);
 }
 
-.start-box,
-.over-box {
+.box {
   width: 100%;
-  max-width: 600px;
-  padding: 35px;
+  max-width: 580px;
+  padding: 32px;
   border: 3px solid #ffd700;
   border-radius: 20px;
-  background: linear-gradient(#173d91, #081c56);
+  background: linear-gradient(#174394, #081a52);
   text-align: center;
   box-shadow: 0 0 30px #ffd700;
 }
 
-.start-box h2,
-.over-box h2 {
+.box h2 {
   margin-top: 0;
   color: #ffd700;
-  font-size: 32px;
+  font-size: 31px;
 }
 
-.start-box p,
-.over-box p {
+.box p {
   font-size: 18px;
   line-height: 1.5;
 }
 
 .start-button,
 .restart-button {
-  padding: 15px 35px;
-  border: 0;
-  border-radius: 30px;
+  color: #071238;
   background: #ffd700;
-  color: #07133f;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.start-button:hover,
-.restart-button:hover {
-  background: white;
+  font-size: 18px;
 }
 
 .hidden {
@@ -266,12 +253,6 @@ h1 {
 
   .money-ladder {
     order: -1;
-    width: 100%;
-  }
-
-  .prize {
-    display: inline-block;
-    margin: 3px;
   }
 }
 
@@ -280,8 +261,10 @@ h1 {
     grid-template-columns: 1fr;
   }
 
-  .question {
-    padding: 18px;
+  .logo {
+    width: 145px;
+    height: 145px;
+    font-size: 14px;
   }
 }
 </style>
@@ -290,15 +273,19 @@ h1 {
 <body>
 
 <div class="game">
-  <div class="logo">WHO WANTS<br>TO BE A<br>MILLIONAIRE?</div>
+  <div class="logo">
+    WHO WANTS<br>
+    TO BE A<br>
+    MILLIONAIRE?
+    <small>PROGRAMMING EDITION</small>
+  </div>
 
-  <h1>Who Wants to Be a Millionaire?</h1>
+  <h1>Programming Fundamentals Quiz</h1>
 
   <div class="main">
     <section class="left">
       <div class="question-number" id="questionNumber"></div>
       <div class="question" id="question"></div>
-
       <div class="answers" id="answers"></div>
 
       <div class="lifelines">
@@ -317,20 +304,20 @@ h1 {
   </div>
 </div>
 
-<div class="start-screen" id="startScreen">
-  <div class="start-box">
+<div class="overlay" id="startScreen">
+  <div class="box">
     <h2>Welcome!</h2>
     <p>
-      Answer 15 questions correctly to win £1,000,000.
-      You have three lifelines available.
+      Test your knowledge of programming fundamentals, data,
+      algorithms, testing, hardware and development requirements.
     </p>
     <button class="start-button" id="startButton">Start Game</button>
   </div>
 </div>
 
-<div class="game-over hidden" id="gameOver">
-  <div class="over-box">
-    <h2 id="gameOverTitle">Game Over</h2>
+<div class="overlay hidden" id="gameOver">
+  <div class="box">
+    <h2 id="gameOverTitle"></h2>
     <p id="gameOverText"></p>
     <button class="restart-button" id="restartButton">Play Again</button>
   </div>
@@ -338,237 +325,441 @@ h1 {
 
 <script>
 const prizes = [
-  "£100",
-  "£200",
-  "£300",
-  "£500",
-  "£1,000",
-  "£2,000",
-  "£4,000",
-  "£8,000",
-  "£16,000",
-  "£32,000",
-  "£64,000",
-  "£125,000",
-  "£250,000",
-  "£500,000",
-  "£1,000,000"
+  "£100", "£200", "£300", "£500", "£1,000",
+  "£2,000", "£4,000", "£8,000", "£16,000",
+  "£32,000", "£64,000", "£125,000", "£250,000",
+  "£500,000", "£1,000,000"
 ];
 
 const questions = [
   {
-    question: "What is the capital city of France?",
-    answers: ["Madrid", "Paris", "Rome", "Berlin"],
-    correct: "Paris"
+    q: "What is an algorithm?",
+    a: [
+      "A type of computer hardware",
+      "Step-by-step instructions to solve a problem",
+      "A programming error",
+      "A computer screen"
+    ],
+    c: "Step-by-step instructions to solve a problem"
   },
   {
-    question: "How many days are there in a leap year?",
-    answers: ["365", "366", "364", "367"],
-    correct: "366"
+    q: "What does a program contain?",
+    a: [
+      "Instructions that tell a computer how to complete a task",
+      "Only pictures",
+      "Only numbers",
+      "A list of computer parts"
+    ],
+    c: "Instructions that tell a computer how to complete a task"
   },
   {
-    question: "Which planet is known as the Red Planet?",
-    answers: ["Venus", "Mars", "Jupiter", "Mercury"],
-    correct: "Mars"
+    q: "What does it mean to execute a program?",
+    a: [
+      "Delete the program",
+      "Print the program",
+      "Carry out the program instructions",
+      "Rename the program"
+    ],
+    c: "Carry out the program instructions"
   },
   {
-    question: "What is the largest ocean on Earth?",
-    answers: ["Atlantic Ocean", "Indian Ocean", "Pacific Ocean", "Arctic Ocean"],
-    correct: "Pacific Ocean"
+    q: "What is sequence in programming?",
+    a: [
+      "The order code needs to be in",
+      "A type of error",
+      "A computer's memory",
+      "A type of variable"
+    ],
+    c: "The order code needs to be in"
   },
   {
-    question: "Who wrote Romeo and Juliet?",
-    answers: ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
-    correct: "William Shakespeare"
+    q: "What is a conditional statement used for?",
+    a: [
+      "Storing images",
+      "Making decisions based on whether a condition is TRUE or FALSE",
+      "Connecting to the internet",
+      "Displaying a logo"
+    ],
+    c: "Making decisions based on whether a condition is TRUE or FALSE"
   },
   {
-    question: "What is the chemical symbol for gold?",
-    answers: ["Go", "Gd", "Au", "Ag"],
-    correct: "Au"
+    q: "What does an IF statement evaluate?",
+    a: [
+      "A condition",
+      "A keyboard",
+      "A file name",
+      "A screen size"
+    ],
+    c: "A condition"
   },
   {
-    question: "How many sides does a hexagon have?",
-    answers: ["Five", "Six", "Seven", "Eight"],
-    correct: "Six"
+    q: "What is selection in programming?",
+    a: [
+      "Repeating code forever",
+      "Choosing a path based on a condition",
+      "Storing a value",
+      "Testing computer hardware"
+    ],
+    c: "Choosing a path based on a condition"
   },
   {
-    question: "Which animal is known as the king of the jungle?",
-    answers: ["Tiger", "Elephant", "Lion", "Gorilla"],
-    correct: "Lion"
+    q: "What does iteration mean?",
+    a: [
+      "Repetition",
+      "Deletion",
+      "Compilation",
+      "Comparison"
+    ],
+    c: "Repetition"
   },
   {
-    question: "What is the smallest prime number?",
-    answers: ["0", "1", "2", "3"],
-    correct: "2"
+    q: "What is a for loop commonly used for?",
+    a: [
+      "A count-controlled loop",
+      "Creating a flowchart",
+      "Storing text only",
+      "Finding syntax errors"
+    ],
+    c: "A count-controlled loop"
   },
   {
-    question: "Which country gifted the Statue of Liberty to the United States?",
-    answers: ["France", "Canada", "Spain", "Italy"],
-    correct: "France"
+    q: "What is a count-controlled loop?",
+    a: [
+      "A loop repeated a set number of times",
+      "A loop that never runs",
+      "A type of hardware",
+      "A type of data"
+    ],
+    c: "A loop repeated a set number of times"
   },
   {
-    question: "What is H2O commonly known as?",
-    answers: ["Oxygen", "Hydrogen", "Water", "Salt"],
-    correct: "Water"
+    q: "What is a function?",
+    a: [
+      "A sub-program within a larger program",
+      "A computer monitor",
+      "A type of error",
+      "A number with decimals"
+    ],
+    c: "A sub-program within a larger program"
   },
   {
-    question: "Which instrument has black and white keys?",
-    answers: ["Guitar", "Piano", "Violin", "Trumpet"],
-    correct: "Piano"
+    q: "What is a parameter?",
+    a: [
+      "A value passed into a function",
+      "A type of loop",
+      "A hardware device",
+      "A testing document"
+    ],
+    c: "A value passed into a function"
   },
   {
-    question: "How many continents are there?",
-    answers: ["Five", "Six", "Seven", "Eight"],
-    correct: "Seven"
+    q: "What is pseudocode?",
+    a: [
+      "A textual representation of an algorithm",
+      "A computer virus",
+      "A type of memory",
+      "A programming language compiler"
+    ],
+    c: "A textual representation of an algorithm"
   },
   {
-    question: "Which gas do humans need to breathe?",
-    answers: ["Carbon dioxide", "Oxygen", "Helium", "Nitrogen"],
-    correct: "Oxygen"
+    q: "What is a flowchart?",
+    a: [
+      "A visual representation of an algorithm",
+      "A list of variables",
+      "A type of data",
+      "A computer processor"
+    ],
+    c: "A visual representation of an algorithm"
   },
   {
-    question: "What is the fastest land animal?",
-    answers: ["Lion", "Cheetah", "Horse", "Leopard"],
-    correct: "Cheetah"
+    q: "What is data?",
+    a: [
+      "Raw information, values, facts and figures",
+      "Only computer code",
+      "A programming loop",
+      "A flowchart symbol"
+    ],
+    c: "Raw information, values, facts and figures"
   },
   {
-    question: "Which sport uses a shuttlecock?",
-    answers: ["Tennis", "Badminton", "Cricket", "Hockey"],
-    correct: "Badminton"
+    q: "What is a variable?",
+    a: [
+      "A named memory location that stores a value",
+      "A type of printer",
+      "A programming error",
+      "A search method"
+    ],
+    c: "A named memory location that stores a value"
   },
   {
-    question: "What is the main language spoken in Brazil?",
-    answers: ["Spanish", "Portuguese", "French", "English"],
-    correct: "Portuguese"
+    q: "What is a string?",
+    a: [
+      "A whole number",
+      "A sequence of characters",
+      "A computer processor",
+      "A flowchart"
+    ],
+    c: "A sequence of characters"
   },
   {
-    question: "Which organ pumps blood around the body?",
-    answers: ["Brain", "Lung", "Heart", "Liver"],
-    correct: "Heart"
+    q: "Which example is an integer?",
+    a: [
+      "2.5",
+      "\"Hello\"",
+      "5",
+      "A"
+    ],
+    c: "5"
   },
   {
-    question: "What is the square root of 144?",
-    answers: ["10", "11", "12", "14"],
-    correct: "12"
+    q: "What is a float or real number?",
+    a: [
+      "A decimal number",
+      "A single character",
+      "A list of instructions",
+      "A logical error"
+    ],
+    c: "A decimal number"
   },
   {
-    question: "Which famous detective was created by Arthur Conan Doyle?",
-    answers: ["Hercule Poirot", "Sherlock Holmes", "Miss Marple", "James Bond"],
-    correct: "Sherlock Holmes"
+    q: "What is a character?",
+    a: [
+      "A single letter, digit or symbol",
+      "A collection of arrays",
+      "A whole program",
+      "A testing method"
+    ],
+    c: "A single letter, digit or symbol"
   },
   {
-    question: "Which planet is closest to the Sun?",
-    answers: ["Earth", "Venus", "Mercury", "Mars"],
-    correct: "Mercury"
+    q: "What does casting do?",
+    a: [
+      "Changes the data type of a variable",
+      "Repeats a loop",
+      "Draws a flowchart",
+      "Searches an array"
+    ],
+    c: "Changes the data type of a variable"
   },
   {
-    question: "What is the hardest natural substance?",
-    answers: ["Iron", "Diamond", "Granite", "Quartz"],
-    correct: "Diamond"
+    q: "What is concatenation?",
+    a: [
+      "Joining two strings together",
+      "Removing a variable",
+      "Testing a program",
+      "Sorting numbers"
+    ],
+    c: "Joining two strings together"
   },
   {
-    question: "Which country is famous for the pyramids at Giza?",
-    answers: ["Greece", "Egypt", "Mexico", "Peru"],
-    correct: "Egypt"
+    q: "What is an array?",
+    a: [
+      "A collection of items under one identifier",
+      "A type of syntax error",
+      "A computer screen",
+      "A single instruction"
+    ],
+    c: "A collection of items under one identifier"
   },
   {
-    question: "How many players are on a football team on the pitch?",
-    answers: ["Nine", "Ten", "Eleven", "Twelve"],
-    correct: "Eleven"
+    q: "What is an index?",
+    a: [
+      "A numerical reference to a data location",
+      "A type of processor",
+      "A programming language",
+      "A test result"
+    ],
+    c: "A numerical reference to a data location"
   },
   {
-    question: "What is the boiling point of water at sea level?",
-    answers: ["50°C", "75°C", "100°C", "150°C"],
-    correct: "100°C"
+    q: "What is a Python list?",
+    a: [
+      "A data structure that can store multiple changeable items",
+      "A flowchart symbol",
+      "A computer chip",
+      "A type of search"
+    ],
+    c: "A data structure that can store multiple changeable items"
   },
   {
-    question: "Who painted the Mona Lisa?",
-    answers: ["Vincent van Gogh", "Leonardo da Vinci", "Pablo Picasso", "Michelangelo"],
-    correct: "Leonardo da Vinci"
+    q: "What is syntax?",
+    a: [
+      "The rules of a programming language",
+      "A type of hardware",
+      "A test plan",
+      "A data value"
+    ],
+    c: "The rules of a programming language"
   },
   {
-    question: "Which is the largest planet in our solar system?",
-    answers: ["Saturn", "Earth", "Jupiter", "Neptune"],
-    correct: "Jupiter"
+    q: "What is a syntax error?",
+    a: [
+      "An error that prevents code from running",
+      "An error in the expected result",
+      "A hardware failure",
+      "A successful test"
+    ],
+    c: "An error that prevents code from running"
   },
   {
-    question: "What is the currency of Japan?",
-    answers: ["Yuan", "Won", "Yen", "Rupee"],
-    correct: "Yen"
+    q: "What is a runtime error?",
+    a: [
+      "An error occurring while the program is running",
+      "An error in a flowchart only",
+      "A spelling mistake in a comment",
+      "A type of variable"
+    ],
+    c: "An error occurring while the program is running"
   },
   {
-    question: "Which bird is often associated with delivering messages?",
-    answers: ["Eagle", "Pigeon", "Owl", "Swan"],
-    correct: "Pigeon"
+    q: "What is a logic error?",
+    a: [
+      "A program runs but produces an unexpected result",
+      "A program cannot start",
+      "A missing computer",
+      "A correct output"
+    ],
+    c: "A program runs but produces an unexpected result"
   },
   {
-    question: "How many minutes are in one hour?",
-    answers: ["30", "45", "60", "90"],
-    correct: "60"
+    q: "What is a test plan?",
+    a: [
+      "A document describing tests, expected results and success criteria",
+      "A list of computer parts",
+      "A type of loop",
+      "A programming language"
+    ],
+    c: "A document describing tests, expected results and success criteria"
   },
   {
-    question: "Which sea creature has eight arms?",
-    answers: ["Squid", "Octopus", "Crab", "Starfish"],
-    correct: "Octopus"
+    q: "What is a trace table used for?",
+    a: [
+      "Predicting what happens step by step as an algorithm runs",
+      "Drawing a logo",
+      "Storing images",
+      "Measuring screen brightness"
+    ],
+    c: "Predicting what happens step by step as an algorithm runs"
   },
   {
-    question: "What is the largest mammal in the world?",
-    answers: ["Elephant", "Blue whale", "Giraffe", "Hippopotamus"],
-    correct: "Blue whale"
+    q: "What is normal test data?",
+    a: [
+      "Correct data that should be accepted",
+      "Data outside the allowed range",
+      "Data that should be rejected",
+      "Random computer code"
+    ],
+    c: "Correct data that should be accepted"
   },
   {
-    question: "Which month comes after September?",
-    answers: ["August", "October", "November", "December"],
-    correct: "October"
+    q: "What is extreme test data?",
+    a: [
+      "Acceptable data at the ends of the possible range",
+      "Data that is always invalid",
+      "A syntax error",
+      "A type of search"
+    ],
+    c: "Acceptable data at the ends of the possible range"
   },
   {
-    question: "What is the freezing point of water?",
-    answers: ["0°C", "10°C", "32°C", "100°C"],
-    correct: "0°C"
+    q: "What is invalid test data?",
+    a: [
+      "Data that should be rejected",
+      "Data at the valid limit",
+      "Normal input",
+      "A correct output"
+    ],
+    c: "Data that should be rejected"
   },
   {
-    question: "Which country is shaped like a boot?",
-    answers: ["Italy", "Portugal", "Norway", "India"],
-    correct: "Italy"
+    q: "How does a linear search find an item?",
+    a: [
+      "By checking items from the start to the end",
+      "By always checking the middle",
+      "By deleting the array",
+      "By using a flowchart"
+    ],
+    c: "By checking items from the start to the end"
   },
   {
-    question: "What is the name of our galaxy?",
-    answers: ["Andromeda", "Milky Way", "Whirlpool", "Sombrero"],
-    correct: "Milky Way"
+    q: "How does a binary search work?",
+    a: [
+      "It repeatedly splits a sorted array in half",
+      "It checks every item from the start",
+      "It changes data types",
+      "It runs a subroutine"
+    ],
+    c: "It repeatedly splits a sorted array in half"
   },
   {
-    question: "Which famous wizard attends Hogwarts?",
-    answers: ["Gandalf", "Harry Potter", "Merlin", "Dumbledore"],
-    correct: "Harry Potter"
+    q: "What does a truth table show?",
+    a: [
+      "Inputs and resulting outputs of a logic circuit",
+      "The contents of a variable",
+      "A list of test plans",
+      "The steps in a loop"
+    ],
+    c: "Inputs and resulting outputs of a logic circuit"
   },
   {
-    question: "How many colours are in a traditional rainbow?",
-    answers: ["Five", "Six", "Seven", "Eight"],
-    correct: "Seven"
+    q: "What does an accelerometer detect?",
+    a: [
+      "A change in direction or movement",
+      "A syntax error",
+      "A string value",
+      "A user requirement"
+    ],
+    c: "A change in direction or movement"
   },
   {
-    question: "Which material is made from trees?",
-    answers: ["Glass", "Paper", "Steel", "Plastic"],
-    correct: "Paper"
+    q: "What is artificial intelligence?",
+    a: [
+      "Computer systems performing human-like behaviour",
+      "A type of array",
+      "A normal test",
+      "A flowchart symbol"
+    ],
+    c: "Computer systems performing human-like behaviour"
   },
   {
-    question: "What is the opposite of ancient?",
-    answers: ["Old", "Modern", "Historic", "Past"],
-    correct: "Modern"
+    q: "What is machine learning?",
+    a: [
+      "A computer system learning over time",
+      "A type of syntax",
+      "A method of concatenation",
+      "A programming error"
+    ],
+    c: "A computer system learning over time"
   },
   {
-    question: "Which famous ship sank in 1912?",
-    answers: ["Titanic", "Mayflower", "Beagle", "Endeavour"],
-    correct: "Titanic"
+    q: "What is a prototype?",
+    a: [
+      "An initial product used for testing and review",
+      "A final released product",
+      "A type of data",
+      "A search algorithm"
+    ],
+    c: "An initial product used for testing and review"
+  },
+  {
+    q: "What does efficient mean when describing a program?",
+    a: [
+      "It runs quickly and uses resources effectively",
+      "It always contains errors",
+      "It contains many variables",
+      "It has no user requirements"
+    ],
+    c: "It runs quickly and uses resources effectively"
   }
 ];
 
 let gameQuestions = [];
 let currentQuestion = 0;
+let acceptingAnswer = false;
 let usedFifty = false;
 let usedFriend = false;
 let usedAudience = false;
-let acceptingAnswer = false;
 
 const questionNumber = document.getElementById("questionNumber");
 const questionElement = document.getElementById("question");
@@ -594,19 +785,19 @@ function shuffle(array) {
 function createLadder() {
   ladderElement.innerHTML = "";
 
-  [...prizes].reverse().forEach((prize, index) => {
-    const actualIndex = prizes.length - 1 - index;
-    const div = document.createElement("div");
+  [...prizes].reverse().forEach((prize, reverseIndex) => {
+    const index = prizes.length - 1 - reverseIndex;
+    const item = document.createElement("div");
 
-    div.className = "prize";
-    div.id = "prize-" + actualIndex;
-    div.textContent = `${actualIndex + 1}. ${prize}`;
+    item.className = "prize";
+    item.id = "prize-" + index;
+    item.textContent = `${index + 1}. ${prize}`;
 
-    if (actualIndex === 4 || actualIndex === 9) {
-      div.classList.add("safe");
+    if (index === 4 || index === 9) {
+      item.classList.add("safe");
     }
 
-    ladderElement.appendChild(div);
+    ladderElement.appendChild(item);
   });
 }
 
@@ -629,33 +820,30 @@ function startGame() {
 }
 
 function showQuestion() {
+  const current = gameQuestions[currentQuestion];
+
   acceptingAnswer = true;
   messageElement.textContent = "";
-
-  const current = gameQuestions[currentQuestion];
 
   questionNumber.textContent =
     `Question ${currentQuestion + 1} of 15 — For ${prizes[currentQuestion]}`;
 
-  questionElement.textContent = current.question;
+  questionElement.textContent = current.q;
   answersElement.innerHTML = "";
 
-  const shuffledAnswers = shuffle(current.answers);
-
-  shuffledAnswers.forEach(answer => {
+  shuffle(current.a).forEach(answer => {
     const button = document.createElement("button");
 
     button.className = "answer";
     button.textContent = answer;
     button.dataset.answer = answer;
 
-    button.addEventListener("click", () => chooseAnswer(button, answer));
-
+    button.onclick = () => chooseAnswer(button, answer);
     answersElement.appendChild(button);
   });
 
-  document.querySelectorAll(".prize").forEach(prize => {
-    prize.classList.remove("current");
+  document.querySelectorAll(".prize").forEach(item => {
+    item.classList.remove("current");
   });
 
   document
@@ -668,64 +856,54 @@ function chooseAnswer(button, answer) {
 
   acceptingAnswer = false;
 
-  const correctAnswer = gameQuestions[currentQuestion].correct;
-  const allButtons = document.querySelectorAll(".answer");
+  const correct = gameQuestions[currentQuestion].c;
 
-  allButtons.forEach(btn => {
-    btn.disabled = true;
+  document.querySelectorAll(".answer").forEach(item => {
+    item.disabled = true;
 
-    if (btn.dataset.answer === correctAnswer) {
-      btn.classList.add("correct");
+    if (item.dataset.answer === correct) {
+      item.classList.add("correct");
     }
   });
 
-  if (answer === correctAnswer) {
+  if (answer === correct) {
     button.classList.add("correct");
     messageElement.textContent = "Correct!";
 
     if (currentQuestion === 14) {
       setTimeout(() => {
-        finishGame(
+        endGame(
           "Congratulations!",
           "You answered all 15 questions correctly and won £1,000,000!"
         );
       }, 1200);
     } else {
       currentQuestion++;
-
-      setTimeout(() => {
-        showQuestion();
-      }, 1200);
+      setTimeout(showQuestion, 1200);
     }
   } else {
     button.classList.add("wrong");
 
     setTimeout(() => {
-      finishGame(
+      endGame(
         "Game Over",
-        `That answer was incorrect. The correct answer was "${correctAnswer}". You won ${getWinnings()}.`
+        `That answer was incorrect.<br><br>
+        The correct answer was:<br><strong>${correct}</strong><br><br>
+        You won ${getWinnings()}.`
       );
     }, 1200);
   }
 }
 
 function getWinnings() {
-  if (currentQuestion === 0) return "£0";
-
-  if (currentQuestion >= 10) {
-    return prizes[9];
-  }
-
-  if (currentQuestion >= 5) {
-    return prizes[4];
-  }
-
+  if (currentQuestion >= 10) return prizes[9];
+  if (currentQuestion >= 5) return prizes[4];
   return "£0";
 }
 
-function finishGame(title, text) {
+function endGame(title, text) {
   gameOverTitle.textContent = title;
-  gameOverText.textContent = text;
+  gameOverText.innerHTML = text;
   gameOver.classList.remove("hidden");
 }
 
@@ -735,16 +913,14 @@ function useFiftyFifty() {
   usedFifty = true;
   fiftyButton.disabled = true;
 
-  const correctAnswer = gameQuestions[currentQuestion].correct;
-  const incorrectButtons = [...document.querySelectorAll(".answer")]
-    .filter(button => button.dataset.answer !== correctAnswer);
+  const correct = gameQuestions[currentQuestion].c;
+  const incorrect = [...document.querySelectorAll(".answer")]
+    .filter(button => button.dataset.answer !== correct);
 
-  shuffle(incorrectButtons)
-    .slice(0, 2)
-    .forEach(button => {
-      button.disabled = true;
-      button.style.visibility = "hidden";
-    });
+  shuffle(incorrect).slice(0, 2).forEach(button => {
+    button.disabled = true;
+    button.style.visibility = "hidden";
+  });
 
   messageElement.textContent = "Two incorrect answers have been removed.";
 }
@@ -756,18 +932,17 @@ function useFriend() {
   friendButton.disabled = true;
 
   const current = gameQuestions[currentQuestion];
-  const isWrongHint = Math.random() < 0.0005;
+  const accidentallyWrong = Math.random() < 0.0005;
+  let suggestion = current.c;
 
-  let hintAnswer = current.correct;
-
-  if (isWrongHint) {
-    hintAnswer = shuffle(
-      current.answers.filter(answer => answer !== current.correct)
+  if (accidentallyWrong) {
+    suggestion = shuffle(
+      current.a.filter(answer => answer !== current.c)
     )[0];
   }
 
   messageElement.textContent =
-    `Your friend thinks the answer is "${hintAnswer}".`;
+    `Your friend thinks the answer is: "${suggestion}"`;
 }
 
 function useAudience() {
@@ -780,33 +955,27 @@ function useAudience() {
   const correctPercentage = Math.floor(Math.random() * 11) + 65;
   const remaining = 100 - correctPercentage;
 
-  const incorrectAnswers = current.answers.filter(
-    answer => answer !== current.correct
-  );
-
-  const firstIncorrect = Math.floor(Math.random() * remaining);
-  const secondIncorrect = Math.floor(
-    Math.random() * (remaining - firstIncorrect)
-  );
-  const thirdIncorrect =
-    remaining - firstIncorrect - secondIncorrect;
+  const wrongAnswers = current.a.filter(answer => answer !== current.c);
+  const first = Math.floor(Math.random() * (remaining + 1));
+  const second = Math.floor(Math.random() * (remaining - first + 1));
+  const third = remaining - first - second;
 
   const results = [
-    `${current.correct}: ${correctPercentage}%`,
-    `${incorrectAnswers[0]}: ${firstIncorrect}%`,
-    `${incorrectAnswers[1]}: ${secondIncorrect}%`,
-    `${incorrectAnswers[2]}: ${thirdIncorrect}%`
+    `${current.c}: ${correctPercentage}%`,
+    `${wrongAnswers[0]}: ${first}%`,
+    `${wrongAnswers[1]}: ${second}%`,
+    `${wrongAnswers[2]}: ${third}%`
   ];
 
   messageElement.textContent =
-    "Audience poll — " + shuffle(results).join(" | ");
+    "Audience poll: " + shuffle(results).join(" | ");
 }
 
-startButton.addEventListener("click", startGame);
-restartButton.addEventListener("click", startGame);
-fiftyButton.addEventListener("click", useFiftyFifty);
-friendButton.addEventListener("click", useFriend);
-audienceButton.addEventListener("click", useAudience);
+startButton.onclick = startGame;
+restartButton.onclick = startGame;
+fiftyButton.onclick = useFiftyFifty;
+friendButton.onclick = useFriend;
+audienceButton.onclick = useAudience;
 
 createLadder();
 </script>
